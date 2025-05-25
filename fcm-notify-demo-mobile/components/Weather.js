@@ -2,138 +2,116 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
-import { getElevation, getTypography } from '../theme/theme';
+import { getTypography } from '../theme/theme';
 
 export const Weather = () => {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
+      width: '100%',
+    },
+    header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: '100%',
-      paddingHorizontal: 16,
-      marginBottom: 20,
+      alignItems: 'flex-start',
+      marginBottom: 16,
     },
-    weatherCard: {
+    leftContent: {
       flex: 1,
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.extraLarge,
-      padding: 16,
-      marginRight: 12,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
     },
-    weatherText: {
-      ...getTypography('title', 'large'),
+    condition: {
+      ...getTypography('headline', 'small'),
       color: theme.colors.onSurface,
-      marginBottom: 12,
+      marginBottom: 16,
+    },
+    temperature: {
+      ...getTypography('display', 'medium'),
+      color: theme.colors.primary,
+      fontSize: 32,
+    },
+    weatherIcon: {
+      backgroundColor: theme.colors.primaryContainer,
+      borderRadius: 12,
+      padding: 8,
+      marginLeft: 8,
     },
     humidityContainer: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: 24,
+      padding: 8,
+      paddingHorizontal: 12,
       flexDirection: 'row',
       alignItems: 'center',
+      alignSelf: 'flex-start',
       marginBottom: 12,
-    },
-    humidityBar: {
-      flex: 1,
-      backgroundColor: theme.colors.primary,
-      borderRadius: theme.shape.corner.large,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      marginRight: 8,
     },
     humidityText: {
       ...getTypography('label', 'large'),
       color: theme.colors.onPrimary,
+      marginLeft: 4,
     },
-    humidityIcon: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: theme.colors.primaryContainer,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    infoRow: {
+    bottomRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 8,
     },
-    infoItem: {
+    feelsLike: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: theme.colors.surfaceVariant,
+      borderRadius: 20,
       paddingVertical: 6,
       paddingHorizontal: 12,
-      borderRadius: theme.shape.corner.large,
     },
-    infoText: {
-      marginLeft: 6,
+    feelsLikeText: {
       ...getTypography('body', 'medium'),
       color: theme.colors.onSurfaceVariant,
+      marginLeft: 4,
     },
-    locationItem: {
+    location: {
+      flexDirection: 'row',
+      alignItems: 'center',
       backgroundColor: theme.colors.primary,
+      borderRadius: 20,
+      paddingVertical: 6,
+      paddingHorizontal: 12,
     },
     locationText: {
-      marginLeft: 6,
       ...getTypography('label', 'large'),
       color: theme.colors.onPrimary,
-    },
-    temperatureCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.extraLarge,
-      padding: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
-      width: 100,
-    },
-    temperature: {
-      ...getTypography('headline', 'medium'),
-      color: theme.colors.primary,
-      marginBottom: 8,
-    },
-    weatherIcon: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      backgroundColor: theme.colors.primaryContainer,
-      alignItems: 'center',
-      justifyContent: 'center',
+      marginLeft: 4,
     },
   });
 
   return (
     <View style={styles.container}>
-      <View style={styles.weatherCard}>
-        <Text style={styles.weatherText}>Patchy rain nearby</Text>
-        
-        <View style={styles.humidityContainer}>
-          <View style={styles.humidityBar}>
+      <View style={styles.header}>
+        <View style={styles.leftContent}>
+          <Text style={styles.condition}>Patchy rain nearby</Text>
+          <View style={styles.humidityContainer}>
+            <Ionicons name="water" size={18} color={theme.colors.onPrimary} />
             <Text style={styles.humidityText}>Humidity 86%</Text>
           </View>
-          <View style={styles.humidityIcon}>
-            <Ionicons name="water" size={20} color={theme.colors.primary} />
-          </View>
         </View>
-
-        <View style={styles.infoRow}>
-          <View style={styles.infoItem}>
-            <Ionicons name="thermometer-outline" size={20} color={theme.colors.onSurfaceVariant} />
-            <Text style={styles.infoText}>Feels 25.6°C</Text>
-          </View>
-          <View style={[styles.infoItem, styles.locationItem]}>
-            <Ionicons name="location" size={20} color={theme.colors.onPrimary} />
-            <Text style={styles.locationText}>Pune</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.temperatureCard}>
-        <Text style={styles.temperature}>24°C</Text>
         <View style={styles.weatherIcon}>
-          <Ionicons name="cloudy-night" size={24} color={theme.colors.primary} />
+          <Ionicons name="cloud" size={24} color={theme.colors.onPrimaryContainer} />
         </View>
       </View>
+      
+      <View style={styles.bottomRow}>
+        <View style={styles.feelsLike}>
+          <Ionicons name="thermometer-outline" size={18} color={theme.colors.onSurfaceVariant} />
+          <Text style={styles.feelsLikeText}>Feels 25.6°C</Text>
+        </View>
+        <View style={styles.location}>
+          <Ionicons name="location" size={18} color={theme.colors.onPrimary} />
+          <Text style={styles.locationText}>Pune</Text>
+        </View>
+      </View>
+      
+      <Text style={styles.temperature}>24°C</Text>
     </View>
   );
 }; 

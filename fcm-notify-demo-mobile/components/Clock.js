@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
-import { getElevation, getTypography } from '../theme/theme';
+import { getTypography } from '../theme/theme';
 
 export const Clock = () => {
+  const { theme } = useTheme();
   const [time, setTime] = useState(new Date());
-  const { theme, isDark } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
   const formatTime = (date) => {
     return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true,
-    });
+    }).replace(' ', ' ');
   };
 
   const formatDate = (date) => {
@@ -33,23 +32,16 @@ export const Clock = () => {
 
   const styles = StyleSheet.create({
     container: {
-      width: '100%',
-      paddingHorizontal: 16,
-      marginBottom: 20,
-    },
-    clockCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.extraLarge,
-      padding: 20,
       alignItems: 'center',
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
     },
-    time: {
-      ...getTypography('display', 'small'),
+    timeText: {
+      ...getTypography('display', 'large'),
       color: theme.colors.primary,
+      fontSize: 48,
+      letterSpacing: -1,
       marginBottom: 4,
     },
-    date: {
+    dateText: {
       ...getTypography('title', 'medium'),
       color: theme.colors.onSurfaceVariant,
     },
@@ -57,10 +49,8 @@ export const Clock = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.clockCard}>
-        <Text style={styles.time}>{formatTime(time)}</Text>
-        <Text style={styles.date}>{formatDate(time)}</Text>
-      </View>
+      <Text style={styles.timeText}>{formatTime(time)}</Text>
+      <Text style={styles.dateText}>{formatDate(time)}</Text>
     </View>
   );
 }; 

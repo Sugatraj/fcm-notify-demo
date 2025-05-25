@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, Platform } from 'react-native';
+import { View, StatusBar, StyleSheet, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ThemeProvider, useTheme } from './theme/ThemeProvider';
@@ -13,10 +13,6 @@ const AppContent = () => {
   const { theme, isDark } = useTheme();
 
   const styles = StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: theme.colors.surface,
-    },
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
@@ -24,11 +20,11 @@ const AppContent = () => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.container}>
       <StatusBar
-        backgroundColor={theme.colors.surface}
+        backgroundColor="transparent"
+        translucent
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        translucent={Platform.OS === 'android'}
       />
       <NavigationContainer
         theme={{
@@ -61,7 +57,7 @@ const AppContent = () => {
               overlayStyle: {
                 opacity: current.progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 0.5],
+                  outputRange: [0, 0.32],
                 }),
               },
             }),
@@ -72,7 +68,7 @@ const AppContent = () => {
           <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </View>
   );
 };
 

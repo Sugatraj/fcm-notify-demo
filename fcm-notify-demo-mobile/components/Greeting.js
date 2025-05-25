@@ -1,38 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
-import { getElevation, getTypography } from '../theme/theme';
+import { getTypography } from '../theme/theme';
 
 export const Greeting = () => {
-  const [greeting, setGreeting] = useState('');
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
+  const userName = 'John'; // Replace with actual user name
 
-  useEffect(() => {
+  const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting('Good morning');
-    } else if (hour < 18) {
-      setGreeting('Good afternoon');
-    } else {
-      setGreeting('Good evening');
-    }
-  }, []);
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
 
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      paddingHorizontal: 16,
-      marginBottom: 20,
+      marginBottom: 16,
     },
-    greetingCard: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.extraLarge,
-      padding: 16,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
-    },
-    name: {
-      ...getTypography('headline', 'small'),
-      color: theme.colors.primary,
+    greeting: {
+      ...getTypography('display', 'small'),
+      color: theme.colors.onSurface,
       marginBottom: 4,
     },
     message: {
@@ -43,10 +32,8 @@ export const Greeting = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.greetingCard}>
-        <Text style={styles.name}>hey, RAJX</Text>
-        <Text style={styles.message}>{greeting}</Text>
-      </View>
+      <Text style={styles.greeting}>{getGreeting()}</Text>
+      <Text style={styles.message}>Welcome back, {userName}</Text>
     </View>
   );
 }; 

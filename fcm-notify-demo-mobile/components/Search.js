@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { getElevation, getTypography } from '../theme/theme';
@@ -15,39 +15,42 @@ const searchEngines = [
 export const Search = () => {
   const [selectedEngine, setSelectedEngine] = useState('default');
   const { theme, isDark } = useTheme();
+  const [isFocused, setIsFocused] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      paddingHorizontal: 16,
+      marginVertical: 8,
     },
     searchContainer: {
-      width: '100%',
-    },
-    searchBar: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.extraLarge,
+      backgroundColor: isFocused ? theme.colors.surfaceContainerHighest : theme.colors.surfaceContainer,
+      borderRadius: 28,
       paddingHorizontal: 16,
-      marginBottom: 16,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
+      height: 56,
+      borderWidth: isFocused ? 1 : 0,
+      borderColor: theme.colors.outline,
+    },
+    input: {
+      flex: 1,
+      ...getTypography('body', 'large'),
+      color: theme.colors.onSurface,
+      marginLeft: 12,
+      height: '100%',
+      paddingVertical: 8,
+    },
+    searchButton: {
+      padding: 8,
+      marginLeft: -8,
+      borderRadius: 20,
+    },
+    searchButtonPressed: {
+      backgroundColor: theme.colors.surfaceVariant,
     },
     searchIcon: {
       marginRight: 8,
       color: theme.colors.onSurfaceVariant,
-    },
-    input: {
-      flex: 1,
-      height: 48,
-      ...getTypography('body', 'large'),
-      color: theme.colors.onSurface,
-    },
-    searchButton: {
-      backgroundColor: theme.colors.primary,
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: theme.shape.corner.large,
     },
     searchButtonText: {
       ...getTypography('label', 'large'),
@@ -100,22 +103,33 @@ export const Search = () => {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.searchButton,
+            pressed && styles.searchButtonPressed,
+          ]}
+          android_ripple={{ 
+            color: theme.colors.onSurfaceVariant,
+            borderless: true,
+            radius: 20,
+          }}
+        >
           <Ionicons 
             name="search" 
-            size={20} 
-            style={styles.searchIcon} 
+            size={24} 
+            color={theme.colors.onSurfaceVariant} 
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Type here..."
-            placeholderTextColor={theme.colors.onSurfaceVariant}
-          />
-          <TouchableOpacity style={styles.searchButton}>
-            <Text style={styles.searchButtonText}>Search</Text>
-          </TouchableOpacity>
-        </View>
+        </Pressable>
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+      </View>
 
+      <View style={styles.engineContainer}>
         <View style={styles.engineLabel}>
           <Text style={styles.engineLabelText}>Search With</Text>
         </View>

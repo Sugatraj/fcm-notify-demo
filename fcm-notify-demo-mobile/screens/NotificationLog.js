@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Animated, Platform, StatusBar, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { getElevation, getTypography } from '../theme/theme';
@@ -95,19 +95,33 @@ export const NotificationLog = ({ navigation }) => {
   };
 
   const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
+    },
+    statusBar: {
+      backgroundColor: theme.colors.surface,
     },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 16,
-      paddingTop: 12,
-      paddingBottom: 12,
+      paddingVertical: 12,
       backgroundColor: theme.colors.surface,
-      ...getElevation('level0', isDark ? 'dark' : 'light'),
+      ...Platform.select({
+        android: {
+          paddingTop: StatusBar.currentHeight + 12,
+          ...getElevation('level0', isDark ? 'dark' : 'light'),
+        },
+        ios: {
+          ...getElevation('level0', isDark ? 'dark' : 'light'),
+        },
+      }),
     },
     backButton: {
       padding: 8,
@@ -217,106 +231,112 @@ export const NotificationLog = ({ navigation }) => {
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Pressable 
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.backButtonPressed
-          ]}
-          onPress={() => navigation.goBack()}
-          android_ripple={{
-            color: theme.colors.onSurfaceVariant,
-            borderless: true,
-          }}
-        >
-          <Ionicons 
-            name="arrow-back" 
-            size={24} 
-            color={theme.colors.onSurfaceVariant} 
-          />
-        </Pressable>
-        <Text style={styles.title}>Notifications</Text>
-        {notifications.length > 0 && (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+        backgroundColor={theme.colors.surface}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+      />
+      <View style={styles.container}>
+        <View style={styles.header}>
           <Pressable 
             style={({ pressed }) => [
-              styles.clearButton,
-              pressed && styles.clearButtonPressed
+              styles.backButton,
+              pressed && styles.backButtonPressed
             ]}
-            onPress={handleClearAll}
+            onPress={() => navigation.goBack()}
             android_ripple={{
               color: theme.colors.onSurfaceVariant,
               borderless: true,
             }}
           >
-            <Text style={styles.clearButtonText}>Clear All</Text>
+            <Ionicons 
+              name="arrow-back" 
+              size={24} 
+              color={theme.colors.onSurfaceVariant} 
+            />
           </Pressable>
-        )}
-      </View>
+          <Text style={styles.title}>Notifications</Text>
+          {notifications.length > 0 && (
+            <Pressable 
+              style={({ pressed }) => [
+                styles.clearButton,
+                pressed && styles.clearButtonPressed
+              ]}
+              onPress={handleClearAll}
+              android_ripple={{
+                color: theme.colors.onSurfaceVariant,
+                borderless: true,
+              }}
+            >
+              <Text style={styles.clearButtonText}>Clear All</Text>
+            </Pressable>
+          )}
+        </View>
 
-      <ScrollView style={styles.scrollView}>
-        {notifications.length === 0 ? (
-          <Animated.View style={[styles.emptyState, { opacity: fadeAnim }]}>
-            <View style={styles.emptyIconContainer}>
-              <Ionicons 
-                name="notifications-off-outline" 
-                size={32} 
-                color={theme.colors.onSurfaceVariant} 
-              />
-            </View>
-            <Text style={styles.emptyTitle}>No notifications</Text>
-            <Text style={styles.emptyText}>
-              You're all caught up! New notifications will appear here.
-            </Text>
-          </Animated.View>
-        ) : (
-          <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-            {notifications.map((notification) => (
-              <Pressable
-                key={notification.id}
-                style={({ pressed }) => [
-                  styles.notificationCard,
-                  !notification.read && styles.unreadCard,
-                  pressed && styles.notificationCardPressed
-                ]}
-                onPress={() => handleNotificationPress(notification)}
-                android_ripple={{
-                  color: notification.read ? 
-                    theme.colors.onSurfaceVariant : 
-                    theme.colors.onPrimaryContainer,
-                  foreground: true,
-                }}
-              >
-                <View style={styles.notificationHeader}>
-                  <View style={styles.titleContainer}>
-                    {!notification.read && (
-                      <View style={styles.unreadDot} />
-                    )}
+        <ScrollView style={styles.scrollView}>
+          {notifications.length === 0 ? (
+            <Animated.View style={[styles.emptyState, { opacity: fadeAnim }]}>
+              <View style={styles.emptyIconContainer}>
+                <Ionicons 
+                  name="notifications-off-outline" 
+                  size={32} 
+                  color={theme.colors.onSurfaceVariant} 
+                />
+              </View>
+              <Text style={styles.emptyTitle}>No notifications</Text>
+              <Text style={styles.emptyText}>
+                You're all caught up! New notifications will appear here.
+              </Text>
+            </Animated.View>
+          ) : (
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              {notifications.map((notification) => (
+                <Pressable
+                  key={notification.id}
+                  style={({ pressed }) => [
+                    styles.notificationCard,
+                    !notification.read && styles.unreadCard,
+                    pressed && styles.notificationCardPressed
+                  ]}
+                  onPress={() => handleNotificationPress(notification)}
+                  android_ripple={{
+                    color: notification.read ? 
+                      theme.colors.onSurfaceVariant : 
+                      theme.colors.onPrimaryContainer,
+                    foreground: true,
+                  }}
+                >
+                  <View style={styles.notificationHeader}>
+                    <View style={styles.titleContainer}>
+                      {!notification.read && (
+                        <View style={styles.unreadDot} />
+                      )}
+                      <Text style={[
+                        styles.notificationTitle,
+                        !notification.read && { color: theme.colors.onPrimaryContainer }
+                      ]}>
+                        {notification.title}
+                      </Text>
+                    </View>
                     <Text style={[
-                      styles.notificationTitle,
+                      styles.timestamp,
                       !notification.read && { color: theme.colors.onPrimaryContainer }
                     ]}>
-                      {notification.title}
+                      {formatTime(notification.timestamp)}
                     </Text>
                   </View>
                   <Text style={[
-                    styles.timestamp,
+                    styles.notificationBody,
                     !notification.read && { color: theme.colors.onPrimaryContainer }
                   ]}>
-                    {formatTime(notification.timestamp)}
+                    {notification.body}
                   </Text>
-                </View>
-                <Text style={[
-                  styles.notificationBody,
-                  !notification.read && { color: theme.colors.onPrimaryContainer }
-                ]}>
-                  {notification.body}
-                </Text>
-              </Pressable>
-            ))}
-          </Animated.View>
-        )}
-      </ScrollView>
-    </View>
+                </Pressable>
+              ))}
+            </Animated.View>
+          )}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }; 

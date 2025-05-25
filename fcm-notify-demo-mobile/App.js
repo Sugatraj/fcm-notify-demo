@@ -1,81 +1,85 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
-import { Clock } from './components/Clock';
-import { Weather } from './components/Weather';
-import { Search } from './components/Search';
-import { Greeting } from './components/Greeting';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ThemeProvider, useTheme } from './theme/ThemeProvider';
+import { HomeScreen } from './screens/HomeScreen';
 import { NotificationLog } from './screens/NotificationLog';
 import { NotificationDetail } from './screens/NotificationDetail';
-import { NotificationFAB } from './components/NotificationFAB';
-import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 
-const Stack = createNativeStackNavigator();
-
-const HomeScreen = ({ navigation }) => {
-  const { theme } = useTheme();
-
-  return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <StatusBar 
-        barStyle={theme.isDark ? "light-content" : "dark-content"} 
-        backgroundColor={theme.colors.background} 
-      />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        <Clock />
-        <Weather />
-        <Greeting />
-        <Search />
-      </ScrollView>
-      <NotificationFAB onPress={() => navigation.navigate('Notifications')} />
-    </View>
-  );
-};
+const Stack = createStackNavigator();
 
 const AppContent = () => {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+  });
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.colors.background },
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+        backgroundColor={theme.colors.surface}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        translucent={Platform.OS === 'android'}
+      />
+      <NavigationContainer
+        theme={{
+          dark: isDark,
+          colors: {
+            primary: theme.colors.primary,
+            background: theme.colors.background,
+            card: theme.colors.surface,
+            text: theme.colors.onSurface,
+            border: theme.colors.outline,
+            notification: theme.colors.primary,
+          },
         }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Notifications" component={NotificationLog} />
-        <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            cardStyle: styles.container,
+            cardStyleInterpolator: ({ current, layouts }) => ({
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.width, 0],
+                    }),
+                  },
+                ],
+              },
+              overlayStyle: {
+                opacity: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.5],
+                }),
+              },
+            }),
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Notifications" component={NotificationLog} />
+          <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 };
 
-const App = () => {
+export default function App() {
   return (
     <ThemeProvider>
       <AppContent />
     </ThemeProvider>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  content: {
-    paddingTop: 40,
-    paddingBottom: 20,
-  },
-});
-
-export default App; 
+} 

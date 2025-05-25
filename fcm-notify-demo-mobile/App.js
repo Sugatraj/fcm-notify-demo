@@ -10,13 +10,19 @@ import { Greeting } from './components/Greeting';
 import { NotificationLog } from './screens/NotificationLog';
 import { NotificationDetail } from './screens/NotificationDetail';
 import { NotificationFAB } from './components/NotificationFAB';
+import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 
 const Stack = createNativeStackNavigator();
 
 const HomeScreen = ({ navigation }) => {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f0f6ff" />
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar 
+        barStyle={theme.isDark ? "light-content" : "dark-content"} 
+        backgroundColor={theme.colors.background} 
+      />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -32,13 +38,15 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-const App = () => {
+const AppContent = () => {
+  const { theme } = useTheme();
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#f0f6ff' },
+          contentStyle: { backgroundColor: theme.colors.background },
         }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -49,10 +57,17 @@ const App = () => {
   );
 };
 
+const App = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f6ff',
   },
   scrollView: {
     flex: 1,

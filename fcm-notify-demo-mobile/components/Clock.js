@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeProvider';
+import { getElevation, getTypography } from '../theme/theme';
 
 export const Clock = () => {
   const [time, setTime] = useState(new Date());
+  const { theme, isDark } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,6 +31,30 @@ export const Clock = () => {
     });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      width: '100%',
+      paddingHorizontal: 16,
+      marginBottom: 20,
+    },
+    clockCard: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.shape.corner.extraLarge,
+      padding: 20,
+      alignItems: 'center',
+      ...getElevation('level1', isDark ? 'dark' : 'light'),
+    },
+    time: {
+      ...getTypography('display', 'small'),
+      color: theme.colors.primary,
+      marginBottom: 4,
+    },
+    date: {
+      ...getTypography('title', 'medium'),
+      color: theme.colors.onSurfaceVariant,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.clockCard}>
@@ -36,34 +63,4 @@ export const Clock = () => {
       </View>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingHorizontal: 16,
-    marginBottom: 20,
-  },
-  clockCard: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  time: {
-    fontSize: 36,
-    fontWeight: '600',
-    color: '#4285f4',
-    marginBottom: 4,
-  },
-  date: {
-    fontSize: 16,
-    color: '#5f6368',
-    fontWeight: '500',
-  },
-}); 
+}; 

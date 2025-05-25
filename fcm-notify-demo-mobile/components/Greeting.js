@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeProvider';
+import { getElevation, getTypography } from '../theme/theme';
 
 export const Greeting = () => {
   const [greeting, setGreeting] = useState('');
+  const { theme, isDark } = useTheme();
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -15,6 +18,29 @@ export const Greeting = () => {
     }
   }, []);
 
+  const styles = StyleSheet.create({
+    container: {
+      width: '100%',
+      paddingHorizontal: 16,
+      marginBottom: 20,
+    },
+    greetingCard: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.shape.corner.extraLarge,
+      padding: 16,
+      ...getElevation('level1', isDark ? 'dark' : 'light'),
+    },
+    name: {
+      ...getTypography('headline', 'small'),
+      color: theme.colors.primary,
+      marginBottom: 4,
+    },
+    message: {
+      ...getTypography('title', 'medium'),
+      color: theme.colors.onSurfaceVariant,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.greetingCard}>
@@ -23,33 +49,4 @@ export const Greeting = () => {
       </View>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    paddingHorizontal: 16,
-    marginBottom: 20,
-  },
-  greetingCard: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  name: {
-    fontSize: 20,
-    color: '#4285f4',
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  message: {
-    fontSize: 16,
-    color: '#5f6368',
-    fontWeight: '500',
-  },
-}); 
+}; 

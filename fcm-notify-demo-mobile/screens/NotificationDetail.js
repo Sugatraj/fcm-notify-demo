@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeProvider';
+import { getElevation, getTypography } from '../theme/theme';
 
 export const NotificationDetail = ({ route, navigation }) => {
   const { notification } = route.params;
+  const { theme, isDark } = useTheme();
 
   const formatDateTime = (date) => {
     return new Date(date).toLocaleString('en-US', {
@@ -16,6 +19,98 @@ export const NotificationDetail = ({ route, navigation }) => {
     });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingTop: 20,
+      paddingBottom: 16,
+      backgroundColor: theme.colors.surface,
+      ...getElevation('level2', isDark ? 'dark' : 'light'),
+    },
+    backButton: {
+      padding: 8,
+      borderRadius: theme.shape.corner.small,
+    },
+    title: {
+      ...getTypography('headline', 'small'),
+      color: theme.colors.onSurface,
+    },
+    placeholder: {
+      width: 40,
+    },
+    content: {
+      flex: 1,
+      padding: 16,
+    },
+    card: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.shape.corner.extraLarge,
+      padding: 20,
+      ...getElevation('level1', isDark ? 'dark' : 'light'),
+    },
+    iconContainer: {
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    iconCircle: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: theme.colors.primaryContainer,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    notificationTitle: {
+      ...getTypography('headline', 'small'),
+      color: theme.colors.onSurface,
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    timestamp: {
+      ...getTypography('body', 'medium'),
+      color: theme.colors.onSurfaceVariant,
+      textAlign: 'center',
+      marginBottom: 24,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: theme.colors.outlineVariant,
+      marginVertical: 24,
+    },
+    bodyTitle: {
+      ...getTypography('title', 'medium'),
+      color: theme.colors.onSurface,
+      marginBottom: 8,
+    },
+    body: {
+      ...getTypography('body', 'large'),
+      color: theme.colors.onSurfaceVariant,
+      marginBottom: 24,
+    },
+    metaInfo: {
+      backgroundColor: theme.colors.surfaceVariant,
+      borderRadius: theme.shape.corner.medium,
+      padding: 16,
+    },
+    metaItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    metaText: {
+      ...getTypography('body', 'medium'),
+      color: theme.colors.onSurfaceVariant,
+      marginLeft: 8,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -23,7 +118,11 @@ export const NotificationDetail = ({ route, navigation }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color="#4285f4" />
+          <Ionicons 
+            name="arrow-back" 
+            size={24} 
+            color={theme.colors.primary} 
+          />
         </TouchableOpacity>
         <Text style={styles.title}>Notification Details</Text>
         <View style={styles.placeholder} />
@@ -36,7 +135,7 @@ export const NotificationDetail = ({ route, navigation }) => {
               <Ionicons 
                 name="notifications" 
                 size={32} 
-                color="#4285f4" 
+                color={theme.colors.onPrimaryContainer} 
               />
             </View>
           </View>
@@ -58,7 +157,11 @@ export const NotificationDetail = ({ route, navigation }) => {
 
           <View style={styles.metaInfo}>
             <View style={styles.metaItem}>
-              <Ionicons name="time-outline" size={20} color="#5f6368" />
+              <Ionicons 
+                name="time-outline" 
+                size={20} 
+                color={theme.colors.onSurfaceVariant} 
+              />
               <Text style={styles.metaText}>
                 Received {formatDateTime(notification.timestamp)}
               </Text>
@@ -67,7 +170,7 @@ export const NotificationDetail = ({ route, navigation }) => {
               <Ionicons 
                 name={notification.read ? "checkmark-circle" : "ellipse"} 
                 size={20} 
-                color={notification.read ? "#34A853" : "#4285f4"} 
+                color={notification.read ? theme.colors.tertiary : theme.colors.primary} 
               />
               <Text style={styles.metaText}>
                 {notification.read ? "Read" : "Unread"}
@@ -78,107 +181,4 @@ export const NotificationDetail = ({ route, navigation }) => {
       </ScrollView>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f6ff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16,
-    backgroundColor: '#fff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#202124',
-  },
-  placeholder: {
-    width: 40,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#e8f0fe',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  notificationTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#202124',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  timestamp: {
-    fontSize: 14,
-    color: '#5f6368',
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#e8eaed',
-    marginVertical: 24,
-  },
-  bodyTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#202124',
-    marginBottom: 8,
-  },
-  body: {
-    fontSize: 16,
-    color: '#5f6368',
-    lineHeight: 24,
-    marginBottom: 24,
-  },
-  metaInfo: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 12,
-    padding: 16,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  metaText: {
-    fontSize: 14,
-    color: '#5f6368',
-    marginLeft: 8,
-  },
-}); 
+}; 

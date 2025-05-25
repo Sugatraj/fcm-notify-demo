@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const NOTIFICATION_STORAGE_KEY = '@notifications';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { getNotifications, clearNotifications } from '../services/notificationStorage';
 
 export const NotificationLog = () => {
   const [notifications, setNotifications] = useState([]);
@@ -12,17 +10,16 @@ export const NotificationLog = () => {
   }, []);
 
   const loadNotifications = async () => {
-    try {
-      const stored = await AsyncStorage.getItem(NOTIFICATION_STORAGE_KEY);
-      if (stored) {
-        setNotifications(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error('Error loading notifications:', error);
-    }
+    const stored = await getNotifications();
+    setNotifications(stored);
   };
 
-  const renderNotification = ({ item, index }) => (
+  const handleClearNotifications = async () => {
+    await clearNotifications();
+    setNotifications([]);
+  };
+
+  const renderNotification = ({ item }) => (
     <View style={styles.notificationItem}>
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.body}>{item.body}</Text>
@@ -35,7 +32,14 @@ export const NotificationLog = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Notification History</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Notification History</Text>
+        {notifications.length > 0 && (
+          <TouchableOpacity onPress={handleClearNotifications} style={styles.clearButton}>
+            <Text style={styles.clearButtonText}>Clear All</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       {notifications.length === 0 ? (
         <Text style={styles.emptyText}>No notifications yet</Text>
       ) : (
@@ -56,10 +60,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+  },
+  clearButton: {
+    backgroundColor: '#ff4444',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 4,
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   list: {
     flexGrow: 1,

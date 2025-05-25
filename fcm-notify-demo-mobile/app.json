@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FCM Demo App",
-    "slug": "fcm-demo-app",
+    "name": "FCM Notify Demo",
+    "slug": "fcm-notify-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,18 +15,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.fcmnotifydemo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.example.fcmdemoapp",
+      "package": "com.example.fcmnotifydemo",
       "googleServicesFile": "./google-services.json"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [

@@ -46,10 +46,19 @@ export const NotificationLog = ({ navigation }) => {
     }
   };
 
+  const handleNotificationPress = (notification) => {
+    markAsRead(notification.id);
+    navigation.navigate('NotificationDetail', { notification });
+  };
+
   const markAsRead = (id) => {
     setNotifications(notifications.map(notif => 
       notif.id === id ? { ...notif, read: true } : notif
     ));
+  };
+
+  const handleClearAll = () => {
+    setNotifications([]);
   };
 
   return (
@@ -62,39 +71,56 @@ export const NotificationLog = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color="#4285f4" />
         </TouchableOpacity>
         <Text style={styles.title}>Notifications</Text>
-        <TouchableOpacity style={styles.clearButton}>
-          <Text style={styles.clearButtonText}>Clear All</Text>
-        </TouchableOpacity>
+        {notifications.length > 0 && (
+          <TouchableOpacity 
+            style={styles.clearButton}
+            onPress={handleClearAll}
+          >
+            <Text style={styles.clearButtonText}>Clear All</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <ScrollView style={styles.scrollView}>
-        {notifications.map((notification) => (
-          <TouchableOpacity
-            key={notification.id}
-            style={[
-              styles.notificationCard,
-              !notification.read && styles.unreadCard
-            ]}
-            onPress={() => markAsRead(notification.id)}
-          >
-            <View style={styles.notificationHeader}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.notificationTitle}>
-                  {notification.title}
-                </Text>
-                {!notification.read && (
-                  <View style={styles.unreadDot} />
-                )}
-              </View>
-              <Text style={styles.timestamp}>
-                {formatTime(notification.timestamp)}
-              </Text>
+        {notifications.length === 0 ? (
+          <View style={styles.emptyState}>
+            <View style={styles.emptyIconContainer}>
+              <Ionicons name="notifications-off" size={48} color="#5f6368" />
             </View>
-            <Text style={styles.notificationBody}>
-              {notification.body}
+            <Text style={styles.emptyTitle}>No notifications</Text>
+            <Text style={styles.emptyText}>
+              You're all caught up! New notifications will appear here.
             </Text>
-          </TouchableOpacity>
-        ))}
+          </View>
+        ) : (
+          notifications.map((notification) => (
+            <TouchableOpacity
+              key={notification.id}
+              style={[
+                styles.notificationCard,
+                !notification.read && styles.unreadCard
+              ]}
+              onPress={() => handleNotificationPress(notification)}
+            >
+              <View style={styles.notificationHeader}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.notificationTitle}>
+                    {notification.title}
+                  </Text>
+                  {!notification.read && (
+                    <View style={styles.unreadDot} />
+                  )}
+                </View>
+                <Text style={styles.timestamp}>
+                  {formatTime(notification.timestamp)}
+                </Text>
+              </View>
+              <Text style={styles.notificationBody}>
+                {notification.body}
+              </Text>
+            </TouchableOpacity>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -186,5 +212,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#5f6368',
     lineHeight: 20,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  emptyIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#f8f9fa',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#202124',
+    marginBottom: 8,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#5f6368',
+    textAlign: 'center',
+    paddingHorizontal: 32,
   },
 }); 

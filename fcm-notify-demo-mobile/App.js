@@ -8,6 +8,7 @@ import { Weather } from './components/Weather';
 import { Search } from './components/Search';
 import { Greeting } from './components/Greeting';
 import { NotificationLog } from './screens/NotificationLog';
+import { NotificationDetail } from './screens/NotificationDetail';
 import { NotificationFAB } from './components/NotificationFAB';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,7 @@ const App = () => {
       >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Notifications" component={NotificationLog} />
+        <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

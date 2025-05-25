@@ -24,16 +24,13 @@ export const NotificationLog = () => {
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.body}>{item.body}</Text>
       <Text style={styles.timestamp}>{new Date(item.timestamp).toLocaleString()}</Text>
-      {item.sound && (
-        <Text style={styles.sound}>Sound: {item.sound}</Text>
-      )}
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.header}>Notification History</Text>
+        <Text style={styles.header}>Notifications</Text>
         {notifications.length > 0 && (
           <TouchableOpacity onPress={handleClearNotifications} style={styles.clearButton}>
             <Text style={styles.clearButtonText}>Clear All</Text>
@@ -41,7 +38,10 @@ export const NotificationLog = () => {
         )}
       </View>
       {notifications.length === 0 ? (
-        <Text style={styles.emptyText}>No notifications yet</Text>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No notifications yet</Text>
+          <Text style={styles.emptySubtext}>New notifications will appear here</Text>
+        </View>
       ) : (
         <FlatList
           data={notifications}
@@ -58,62 +58,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   clearButton: {
     backgroundColor: '#ff4444',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 4,
+    borderRadius: 6,
   },
   clearButtonText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   list: {
-    flexGrow: 1,
+    padding: 16,
   },
   notificationItem: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#eee',
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   body: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#444',
     marginBottom: 8,
   },
   timestamp: {
     fontSize: 12,
     color: '#666',
   },
-  sound: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
   },
   emptyText: {
-    textAlign: 'center',
     fontSize: 16,
     color: '#666',
-    marginTop: 32,
+    marginBottom: 8,
   },
-});
-
-export default NotificationLog; 
+  emptySubtext: {
+    fontSize: 14,
+    color: '#999',
+  },
+}); 

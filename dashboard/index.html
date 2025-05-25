@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCM Notification Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FCM Notification Dashboard</h1>
+        <form id="notificationForm">
+            <div class="form-group">
+                <label for="title">Notification Title:</label>
+                <input type="text" id="title" required placeholder="Enter notification title">
+            </div>
+            <div class="form-group">
+                <label for="body">Notification Body:</label>
+                <input type="text" id="body" required placeholder="Enter notification message">
+            </div>
+            <div class="form-group">
+                <label for="sound">Sound:</label>
+                <select id="sound">
+                    <option value="default">Default</option>
+                    <option value="notification.wav">Notification Sound</option>
+                    <option value="alert.wav">Alert Sound</option>
+                    <option value="message.wav">Message Sound</option>
+                </select>
+            </div>
+            <button type="submit">Send Notification</button>
+        </form>
+        <div id="response" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Update this with your ngrok URL
+        const API_URL = 'YOUR_NGROK_URL';
+
+        document.getElementById('notificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const body = document.getElementById('body').value;
+            const sound = document.getElementById('sound').value;
+            const responseDiv = document.getElementById('response');
+
+            try {
+                const response = await fetch(`${API_URL}/notify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        body,
+                        sound: sound === 'default' ? null : sound
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    responseDiv.className = 'success';
+                    responseDiv.textContent = 'Notification sent successfully!';
+                } else {
+                    throw new Error(data.detail || 'Failed to send notification');
+                }
+            } catch (error) {
+                responseDiv.className = 'error';
+                responseDiv.textContent = `Error: ${error.message}`;
+            }
+
+            responseDiv.style.display = 'block';
+            setTimeout(() => {
+                responseDiv.style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 

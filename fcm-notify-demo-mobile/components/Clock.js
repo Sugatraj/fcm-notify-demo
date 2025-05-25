@@ -15,11 +15,13 @@ export const Clock = () => {
   }, []);
 
   const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    }).replace(' ', ' ');
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  const formatPeriod = () => {
+    return time.getHours() >= 12 ? 'PM' : 'AM';
   };
 
   const formatDate = (date) => {
@@ -32,14 +34,23 @@ export const Clock = () => {
 
   const styles = StyleSheet.create({
     container: {
-      alignItems: 'center',
+      alignItems: 'flex-start',
+    },
+    timeContainer: {
+      marginBottom: 8,
     },
     timeText: {
       ...getTypography('display', 'large'),
       color: theme.colors.primary,
+      fontSize: 64,
+      lineHeight: 72,
+      letterSpacing: -2,
+    },
+    periodText: {
+      ...getTypography('display', 'large'),
+      color: theme.colors.primary,
       fontSize: 48,
-      letterSpacing: -1,
-      marginBottom: 4,
+      lineHeight: 56,
     },
     dateText: {
       ...getTypography('title', 'medium'),
@@ -49,7 +60,10 @@ export const Clock = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.timeText}>{formatTime(time)}</Text>
+      <View style={styles.timeContainer}>
+        <Text style={styles.timeText}>{formatTime(time)}</Text>
+        <Text style={styles.periodText}>{formatPeriod()}</Text>
+      </View>
       <Text style={styles.dateText}>{formatDate(time)}</Text>
     </View>
   );

@@ -15,73 +15,73 @@ export const Weather = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      marginBottom: 16,
+      marginBottom: 24,
     },
     leftContent: {
       flex: 1,
     },
     condition: {
-      ...getTypography('headline', 'small'),
+      ...getTypography('headline', 'medium'),
       color: theme.colors.onSurface,
-      marginBottom: 16,
-    },
-    temperature: {
-      ...getTypography('display', 'medium'),
-      color: theme.colors.primary,
-      fontSize: 32,
+      marginBottom: 12,
     },
     weatherIcon: {
-      backgroundColor: theme.colors.primaryContainer,
-      borderRadius: 12,
-      padding: 8,
-      marginLeft: 8,
+      backgroundColor: theme.colors.surfaceContainerLowest,
+      borderRadius: 16,
+      padding: 12,
+      marginLeft: 16,
     },
     humidityContainer: {
       backgroundColor: theme.colors.primary,
       borderRadius: 24,
-      padding: 8,
-      paddingHorizontal: 12,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
       flexDirection: 'row',
       alignItems: 'center',
       alignSelf: 'flex-start',
-      marginBottom: 12,
     },
     humidityText: {
       ...getTypography('label', 'large'),
       color: theme.colors.onPrimary,
-      marginLeft: 4,
+      marginLeft: 8,
     },
     bottomRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: 8,
+      marginBottom: 16,
     },
     feelsLike: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.surfaceVariant,
+      backgroundColor: theme.colors.surfaceContainerLowest,
       borderRadius: 20,
-      paddingVertical: 6,
-      paddingHorizontal: 12,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
     },
     feelsLikeText: {
       ...getTypography('body', 'medium'),
-      color: theme.colors.onSurfaceVariant,
-      marginLeft: 4,
+      color: theme.colors.onSurface,
+      marginLeft: 8,
     },
     location: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: theme.colors.primary,
       borderRadius: 20,
-      paddingVertical: 6,
-      paddingHorizontal: 12,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
     },
     locationText: {
       ...getTypography('label', 'large'),
       color: theme.colors.onPrimary,
-      marginLeft: 4,
+      marginLeft: 8,
+    },
+    temperature: {
+      ...getTypography('display', 'large'),
+      color: theme.colors.primary,
+      fontSize: 48,
+      lineHeight: 56,
     },
   });
 
@@ -91,22 +91,22 @@ export const Weather = () => {
         <View style={styles.leftContent}>
           <Text style={styles.condition}>Patchy rain nearby</Text>
           <View style={styles.humidityContainer}>
-            <Ionicons name="water" size={18} color={theme.colors.onPrimary} />
+            <Ionicons name="water" size={20} color={theme.colors.onPrimary} />
             <Text style={styles.humidityText}>Humidity 86%</Text>
           </View>
         </View>
         <View style={styles.weatherIcon}>
-          <Ionicons name="cloud" size={24} color={theme.colors.onPrimaryContainer} />
+          <Ionicons name="cloud" size={28} color={theme.colors.onSurface} />
         </View>
       </View>
       
       <View style={styles.bottomRow}>
         <View style={styles.feelsLike}>
-          <Ionicons name="thermometer-outline" size={18} color={theme.colors.onSurfaceVariant} />
+          <Ionicons name="thermometer-outline" size={20} color={theme.colors.onSurface} />
           <Text style={styles.feelsLikeText}>Feels 25.6°C</Text>
         </View>
         <View style={styles.location}>
-          <Ionicons name="location" size={18} color={theme.colors.onPrimary} />
+          <Ionicons name="location" size={20} color={theme.colors.onPrimary} />
           <Text style={styles.locationText}>Pune</Text>
         </View>
       </View>

@@ -19,25 +19,27 @@ export const HomeScreen = ({ navigation }) => {
       flex: 1,
     },
     content: {
-      padding: 16,
+      paddingTop: StatusBar.currentHeight || 0,
+      paddingHorizontal: 24,
     },
-    section: {
-      marginBottom: 24,
-      backgroundColor: theme.colors.surface,
-      borderRadius: 28,
-      padding: 16,
+    greetingSection: {
+      marginTop: 16,
+      marginBottom: 48,
     },
-    topSection: {
+    mainSection: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 16,
+      marginBottom: 48,
     },
-    clockContainer: {
+    clockSection: {
       flex: 1,
-      marginRight: 16,
+      marginRight: 24,
+      alignItems: 'flex-start',
     },
-    weatherContainer: {
-      flex: 2,
+    weatherSection: {
+      flex: 1.5,
+    },
+    searchSection: {
+      marginTop: 16,
     },
   });
 
@@ -53,20 +55,20 @@ export const HomeScreen = ({ navigation }) => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.section}>
+        <View style={styles.greetingSection}>
           <Greeting />
         </View>
 
-        <View style={styles.topSection}>
-          <View style={[styles.section, styles.clockContainer]}>
+        <View style={styles.mainSection}>
+          <View style={styles.clockSection}>
             <Clock />
           </View>
-          <View style={[styles.section, styles.weatherContainer]}>
+          <View style={styles.weatherSection}>
             <Weather />
           </View>
         </View>
 
-        <View style={styles.section}>
+        <View style={styles.searchSection}>
           <Search />
         </View>
       </ScrollView>

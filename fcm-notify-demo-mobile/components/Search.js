@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
-import { getElevation, getTypography } from '../theme/theme';
+import { getTypography } from '../theme/theme';
 
 const searchEngines = [
   { id: 'default', name: 'Default', icon: 'compass-outline' },
@@ -14,23 +14,21 @@ const searchEngines = [
 
 export const Search = () => {
   const [selectedEngine, setSelectedEngine] = useState('default');
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      marginVertical: 8,
     },
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: isFocused ? theme.colors.surfaceContainerHighest : theme.colors.surfaceContainer,
+      backgroundColor: isFocused ? theme.colors.surfaceContainerHighest : theme.colors.surfaceContainerLowest,
       borderRadius: 28,
-      paddingHorizontal: 16,
+      paddingHorizontal: 4,
       height: 56,
-      borderWidth: isFocused ? 1 : 0,
-      borderColor: theme.colors.outline,
+      marginBottom: 24,
     },
     input: {
       flex: 1,
@@ -41,62 +39,40 @@ export const Search = () => {
       paddingVertical: 8,
     },
     searchButton: {
-      padding: 8,
-      marginLeft: -8,
-      borderRadius: 20,
+      padding: 12,
+      borderRadius: 24,
     },
     searchButtonPressed: {
       backgroundColor: theme.colors.surfaceVariant,
     },
-    searchIcon: {
-      marginRight: 8,
-      color: theme.colors.onSurfaceVariant,
-    },
-    searchButtonText: {
-      ...getTypography('label', 'large'),
-      color: theme.colors.onPrimary,
-    },
-    engineContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+    engineSection: {
+      marginTop: 8,
     },
     engineLabel: {
-      backgroundColor: theme.colors.surface,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderRadius: theme.shape.corner.large,
-      marginRight: 12,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
-    },
-    engineLabelText: {
-      ...getTypography('label', 'large'),
+      ...getTypography('label', 'medium'),
       color: theme.colors.onSurfaceVariant,
+      marginBottom: 12,
     },
-    engineOptions: {
+    engineGrid: {
       flexDirection: 'row',
-      flex: 1,
       flexWrap: 'wrap',
       gap: 8,
     },
     engineButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.surfaceContainerLowest,
       paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderRadius: theme.shape.corner.large,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
+      paddingHorizontal: 16,
+      borderRadius: 20,
     },
     engineButtonSelected: {
-      backgroundColor: theme.colors.primaryContainer,
+      backgroundColor: theme.colors.surfaceContainerHighest,
     },
     engineText: {
-      marginLeft: 6,
       ...getTypography('label', 'large'),
-      color: theme.colors.onSurfaceVariant,
-    },
-    engineTextSelected: {
-      color: theme.colors.onPrimaryContainer,
+      color: theme.colors.onSurface,
+      marginLeft: 8,
     },
   });
 
@@ -111,7 +87,7 @@ export const Search = () => {
           android_ripple={{ 
             color: theme.colors.onSurfaceVariant,
             borderless: true,
-            radius: 20,
+            radius: 24,
           }}
         >
           <Ionicons 
@@ -129,36 +105,29 @@ export const Search = () => {
         />
       </View>
 
-      <View style={styles.engineContainer}>
-        <View style={styles.engineLabel}>
-          <Text style={styles.engineLabelText}>Search With</Text>
-        </View>
-        <View style={styles.engineOptions}>
+      <View style={styles.engineSection}>
+        <Text style={styles.engineLabel}>Search With</Text>
+        <View style={styles.engineGrid}>
           {searchEngines.map((engine) => (
-            <TouchableOpacity
+            <Pressable
               key={engine.id}
               style={[
                 styles.engineButton,
                 selectedEngine === engine.id && styles.engineButtonSelected,
               ]}
               onPress={() => setSelectedEngine(engine.id)}
+              android_ripple={{ 
+                color: theme.colors.onSurfaceVariant,
+                borderless: true,
+              }}
             >
               <Ionicons
                 name={engine.icon}
-                size={18}
-                color={selectedEngine === engine.id 
-                  ? theme.colors.onPrimaryContainer 
-                  : theme.colors.onSurfaceVariant}
+                size={20}
+                color={theme.colors.onSurface}
               />
-              <Text
-                style={[
-                  styles.engineText,
-                  selectedEngine === engine.id && styles.engineTextSelected,
-                ]}
-              >
-                {engine.name}
-              </Text>
-            </TouchableOpacity>
+              <Text style={styles.engineText}>{engine.name}</Text>
+            </Pressable>
           ))}
         </View>
       </View>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Animated, Platform, StatusBar, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, Animated, Platform, StatusBar, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { getElevation, getTypography } from '../theme/theme';
+import { getNotifications, clearNotifications } from '../services/notificationStorage';
 
 // Mock data - replace with actual notification storage later
 const mockNotifications = [
@@ -29,11 +30,25 @@ const mockNotifications = [
   },
 ];
 
-export const NotificationLog = ({ navigation }) => {
-  const [notifications, setNotifications] = useState(mockNotifications);
+export default function NotificationLog({ navigation }) {
+  const [notifications, setNotifications] = useState([]);
   const { theme, isDark } = useTheme();
   const [fadeAnim] = useState(new Animated.Value(1));
   const [scaleAnim] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  const loadNotifications = async () => {
+    const notificationHistory = await getNotifications();
+    setNotifications(notificationHistory);
+  };
+
+  const handleClearNotifications = async () => {
+    await clearNotifications();
+    setNotifications([]);
+  };
 
   const formatTime = (date) => {
     const now = new Date();
@@ -88,11 +103,21 @@ export const NotificationLog = ({ navigation }) => {
         useNativeDriver: true,
       })
     ]).start(() => {
-      setNotifications([]);
+      handleClearNotifications();
       fadeAnim.setValue(1);
       scaleAnim.setValue(1);
     });
   };
+
+  const renderNotification = ({ item }) => (
+    <View style={styles.notificationItem}>
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.body}>{item.body}</Text>
+      <Text style={styles.timestamp}>
+        {new Date(item.timestamp).toLocaleString()}
+      </Text>
+    </View>
+  );
 
   const styles = StyleSheet.create({
     safeArea: {
@@ -228,6 +253,26 @@ export const NotificationLog = ({ navigation }) => {
       textAlign: 'center',
       maxWidth: 280,
     },
+    notificationItem: {
+      padding: 16,
+      borderRadius: 8,
+      backgroundColor: '#f5f5f5',
+      marginBottom: 12,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 4,
+    },
+    body: {
+      fontSize: 14,
+      color: '#666',
+      marginBottom: 8,
+    },
+    timestamp: {
+      fontSize: 12,
+      color: '#999',
+    },
   });
 
   return (
@@ -255,21 +300,14 @@ export const NotificationLog = ({ navigation }) => {
               color={theme.colors.onSurfaceVariant} 
             />
           </Pressable>
-          <Text style={styles.title}>Notifications</Text>
+          <Text style={styles.title}>Notification History</Text>
           {notifications.length > 0 && (
-            <Pressable 
-              style={({ pressed }) => [
-                styles.clearButton,
-                pressed && styles.clearButtonPressed
-              ]}
+            <TouchableOpacity 
+              style={styles.clearButton} 
               onPress={handleClearAll}
-              android_ripple={{
-                color: theme.colors.onSurfaceVariant,
-                borderless: true,
-              }}
             >
               <Text style={styles.clearButtonText}>Clear All</Text>
-            </Pressable>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -290,53 +328,17 @@ export const NotificationLog = ({ navigation }) => {
             </Animated.View>
           ) : (
             <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-              {notifications.map((notification) => (
-                <Pressable
-                  key={notification.id}
-                  style={({ pressed }) => [
-                    styles.notificationCard,
-                    !notification.read && styles.unreadCard,
-                    pressed && styles.notificationCardPressed
-                  ]}
-                  onPress={() => handleNotificationPress(notification)}
-                  android_ripple={{
-                    color: notification.read ? 
-                      theme.colors.onSurfaceVariant : 
-                      theme.colors.onPrimaryContainer,
-                    foreground: true,
-                  }}
-                >
-                  <View style={styles.notificationHeader}>
-                    <View style={styles.titleContainer}>
-                      {!notification.read && (
-                        <View style={styles.unreadDot} />
-                      )}
-                      <Text style={[
-                        styles.notificationTitle,
-                        !notification.read && { color: theme.colors.onPrimaryContainer }
-                      ]}>
-                        {notification.title}
-                      </Text>
-                    </View>
-                    <Text style={[
-                      styles.timestamp,
-                      !notification.read && { color: theme.colors.onPrimaryContainer }
-                    ]}>
-                      {formatTime(notification.timestamp)}
-                    </Text>
-                  </View>
-                  <Text style={[
-                    styles.notificationBody,
-                    !notification.read && { color: theme.colors.onPrimaryContainer }
-                  ]}>
-                    {notification.body}
-                  </Text>
-                </Pressable>
-              ))}
+              <FlatList
+                data={notifications}
+                renderItem={renderNotification}
+                keyExtractor={(item) => item.id}
+                style={styles.list}
+                contentContainerStyle={styles.listContent}
+              />
             </Animated.View>
           )}
         </ScrollView>
       </View>
     </SafeAreaView>
   );
-}; 
+} 

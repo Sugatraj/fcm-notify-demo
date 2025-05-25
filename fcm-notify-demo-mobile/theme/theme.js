@@ -145,18 +145,111 @@ export const darkTheme = {
 };
 
 // Helper function to get elevation style
-export const getElevation = (level, theme = 'light') => {
-  const elevationStyle = theme === 'light' ? lightTheme.elevation[level] : darkTheme.elevation[level];
-  return {
-    elevation: parseInt(level.replace('level', '')),
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: parseInt(level.replace('level', '')) },
-    shadowOpacity: theme === 'light' ? 0.15 : 0.3,
-    shadowRadius: parseInt(level.replace('level', '')) * 2,
+export const getElevation = (level, mode = 'light') => {
+  const elevations = {
+    light: {
+      level0: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0,
+        shadowRadius: 0,
+        elevation: 0,
+      },
+      level1: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.15,
+        shadowRadius: 2,
+        elevation: 2,
+      },
+      level2: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 4,
+      },
+    },
+    dark: {
+      level0: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0,
+        shadowRadius: 0,
+        elevation: 0,
+      },
+      level1: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 3,
+      },
+      level2: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.4,
+        shadowRadius: 5,
+        elevation: 5,
+      },
+    },
   };
+
+  return elevations[mode][level] || elevations.light.level0;
 };
 
 // Helper function to get typography style
-export const getTypography = (variant, size) => {
-  return lightTheme.typography[variant][size];
+export const getTypography = (type, size) => {
+  const typography = {
+    title: {
+      large: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        lineHeight: 28,
+      },
+      medium: {
+        fontSize: 16,
+        fontWeight: '600',
+        lineHeight: 24,
+      },
+      small: {
+        fontSize: 14,
+        fontWeight: '600',
+        lineHeight: 20,
+      },
+    },
+    body: {
+      large: {
+        fontSize: 16,
+        lineHeight: 24,
+      },
+      medium: {
+        fontSize: 14,
+        lineHeight: 20,
+      },
+      small: {
+        fontSize: 12,
+        lineHeight: 16,
+      },
+    },
+    label: {
+      large: {
+        fontSize: 14,
+        fontWeight: '600',
+        lineHeight: 20,
+      },
+      medium: {
+        fontSize: 12,
+        fontWeight: '600',
+        lineHeight: 16,
+      },
+      small: {
+        fontSize: 11,
+        fontWeight: '500',
+        lineHeight: 16,
+      },
+    },
+  };
+
+  return typography[type]?.[size] || typography.body.medium;
 }; 

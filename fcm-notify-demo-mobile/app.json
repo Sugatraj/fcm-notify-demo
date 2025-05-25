@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -26,20 +26,19 @@
       "package": "com.example.fcmnotifydemo",
       "googleServicesFile": "./google-services.json"
     },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "plugins": [
       [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#ffffff",
-          "sounds": ["./assets/sounds/notification.wav", "./assets/sounds/alert.wav", "./assets/sounds/message.wav"]
-        }
+        "expo-notifications"
       ]
     ],
     "extra": {
       "eas": {
         "projectId": "your-project-id"
       }
-    }
+    },
+    "newArchEnabled": true
   }
 } 

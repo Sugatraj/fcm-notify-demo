@@ -1,36 +1,30 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const NOTIFICATION_STORAGE_KEY = '@notifications';
-const MAX_NOTIFICATIONS = 50;
+const NOTIFICATION_HISTORY_KEY = '@notification_history';
 
-export const storeNotification = async (notification) => {
+export const saveNotification = async (notification) => {
   try {
-    const stored = await AsyncStorage.getItem(NOTIFICATION_STORAGE_KEY);
-    let notifications = stored ? JSON.parse(stored) : [];
-    
+    const existingNotifications = await getNotifications();
     const newNotification = {
-      ...notification,
+      id: Date.now().toString(),
       timestamp: new Date().toISOString(),
+      title: notification.request?.content?.title || notification.title,
+      body: notification.request?.content?.body || notification.body,
     };
     
-    notifications.unshift(newNotification);
-    
-    if (notifications.length > MAX_NOTIFICATIONS) {
-      notifications = notifications.slice(0, MAX_NOTIFICATIONS);
-    }
-    
-    await AsyncStorage.setItem(NOTIFICATION_STORAGE_KEY, JSON.stringify(notifications));
-    return true;
+    const updatedNotifications = [newNotification, ...existingNotifications];
+    await AsyncStorage.setItem(NOTIFICATION_HISTORY_KEY, JSON.stringify(updatedNotifications));
+    return updatedNotifications;
   } catch (error) {
-    console.error('Error storing notification:', error);
-    return false;
+    console.error('Error saving notification:', error);
+    return [];
   }
 };
 
 export const getNotifications = async () => {
   try {
-    const stored = await AsyncStorage.getItem(NOTIFICATION_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const notifications = await AsyncStorage.getItem(NOTIFICATION_HISTORY_KEY);
+    return notifications ? JSON.parse(notifications) : [];
   } catch (error) {
     console.error('Error getting notifications:', error);
     return [];
@@ -39,10 +33,8 @@ export const getNotifications = async () => {
 
 export const clearNotifications = async () => {
   try {
-    await AsyncStorage.removeItem(NOTIFICATION_STORAGE_KEY);
-    return true;
+    await AsyncStorage.removeItem(NOTIFICATION_HISTORY_KEY);
   } catch (error) {
     console.error('Error clearing notifications:', error);
-    return false;
   }
 }; 

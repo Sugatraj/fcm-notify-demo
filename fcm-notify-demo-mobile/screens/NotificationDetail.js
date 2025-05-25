@@ -1,144 +1,75 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
-import { getElevation, getTypography } from '../theme/theme';
+import { Ionicons } from '@expo/vector-icons';
 
-export const NotificationDetail = ({ route, navigation }) => {
+export function NotificationDetail({ route, navigation }) {
   const { notification } = route.params;
-  const { theme, isDark } = useTheme();
-
-  const formatDateTime = (date) => {
-    return new Date(date).toLocaleString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-    });
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      backgroundColor: theme.colors.surface,
-      ...getElevation('level0', isDark ? 'dark' : 'light'),
-    },
-    backButton: {
-      padding: 8,
-      borderRadius: theme.shape.corner.full,
-      marginRight: 8,
-    },
-    backButtonPressed: {
-      backgroundColor: theme.colors.surfaceVariant,
-    },
-    title: {
-      ...getTypography('title', 'large'),
-      color: theme.colors.onSurface,
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-      padding: 16,
-    },
-    card: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.shape.corner.medium,
-      padding: 16,
-      ...getElevation('level1', isDark ? 'dark' : 'light'),
-    },
-    notificationTitle: {
-      ...getTypography('headline', 'small'),
-      color: theme.colors.onSurface,
-      marginBottom: 8,
-    },
-    timestamp: {
-      ...getTypography('label', 'medium'),
-      color: theme.colors.onSurfaceVariant,
-      marginBottom: 16,
-    },
-    message: {
-      ...getTypography('body', 'medium'),
-      color: theme.colors.onSurfaceVariant,
-      marginBottom: 24,
-    },
-    metaSection: {
-      borderTopWidth: 1,
-      borderTopColor: theme.colors.outlineVariant,
-      paddingTop: 16,
-    },
-    metaRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 8,
-    },
-    metaLabel: {
-      ...getTypography('label', 'medium'),
-      color: theme.colors.onSurfaceVariant,
-      width: 100,
-    },
-    metaValue: {
-      ...getTypography('body', 'medium'),
-      color: theme.colors.onSurface,
-      flex: 1,
-    },
-  });
+  const { theme } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Pressable 
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.backButtonPressed
-          ]}
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
-          android_ripple={{
-            color: theme.colors.onSurfaceVariant,
-            borderless: true,
-          }}
         >
-          <Ionicons 
-            name="arrow-back" 
-            size={24} 
-            color={theme.colors.onSurfaceVariant} 
-          />
-        </Pressable>
-        <Text style={styles.title}>Notification Details</Text>
+          <Ionicons name="arrow-back" size={24} color={theme.colors.onSurface} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.colors.onSurface }]}>
+          Notification Details
+        </Text>
       </View>
 
-      <ScrollView style={styles.content}>
-        <View style={styles.card}>
-          <Text style={styles.notificationTitle}>{notification.title}</Text>
-          <Text style={styles.timestamp}>
-            {formatDateTime(notification.timestamp)}
-          </Text>
-          <Text style={styles.message}>{notification.body}</Text>
-          
-          <View style={styles.metaSection}>
-            <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>Status</Text>
-              <Text style={styles.metaValue}>
-                {notification.read ? 'Read' : 'Unread'}
-              </Text>
-            </View>
-            <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>Received</Text>
-              <Text style={styles.metaValue}>
-                {formatDateTime(notification.timestamp)}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
+      <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
+        <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+          {notification.title}
+        </Text>
+        <Text style={[styles.timestamp, { color: theme.colors.onSurfaceVariant }]}>
+          {new Date(notification.timestamp).toLocaleString()}
+        </Text>
+        <Text style={[styles.body, { color: theme.colors.onSurfaceVariant }]}>
+          {notification.body}
+        </Text>
+      </View>
     </View>
   );
-}; 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    paddingTop: 48,
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  content: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  timestamp: {
+    fontSize: 14,
+    marginBottom: 16,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+}); 

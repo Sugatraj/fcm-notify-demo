@@ -1,79 +1,49 @@
 import React from 'react';
-import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
-import { Clock } from '../components/Clock';
-import { Weather } from '../components/Weather';
-import { Search } from '../components/Search';
-import { Greeting } from '../components/Greeting';
-import { NotificationFAB } from '../components/NotificationFAB';
+import { Ionicons } from '@expo/vector-icons';
 
-export const HomeScreen = ({ navigation }) => {
-  const { theme, isDark } = useTheme();
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    content: {
-      paddingTop: StatusBar.currentHeight || 0,
-      paddingHorizontal: 24,
-    },
-    greetingSection: {
-      marginTop: 16,
-      marginBottom: 48,
-    },
-    mainSection: {
-      flexDirection: 'row',
-      marginBottom: 48,
-    },
-    clockSection: {
-      flex: 1,
-      marginRight: 24,
-      alignItems: 'flex-start',
-    },
-    weatherSection: {
-      flex: 1.5,
-    },
-    searchSection: {
-      marginTop: 16,
-    },
-  });
+export function HomeScreen({ navigation }) {
+  const { theme } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+        FCM Notify Demo
+      </Text>
+      <TouchableOpacity
+        style={[styles.notificationButton, { backgroundColor: theme.colors.primary }]}
+        onPress={() => navigation.navigate('Notifications')}
       >
-        <View style={styles.greetingSection}>
-          <Greeting />
-        </View>
-
-        <View style={styles.mainSection}>
-          <View style={styles.clockSection}>
-            <Clock />
-          </View>
-          <View style={styles.weatherSection}>
-            <Weather />
-          </View>
-        </View>
-
-        <View style={styles.searchSection}>
-          <Search />
-        </View>
-      </ScrollView>
-
-      <NotificationFAB onPress={() => navigation.navigate('NotificationLog')} />
+        <Ionicons name="notifications-outline" size={24} color="white" />
+        <Text style={styles.buttonText}>View Notifications</Text>
+      </TouchableOpacity>
     </View>
   );
-}; 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+  notificationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 10,
+    gap: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+}); 

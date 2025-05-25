@@ -16,7 +16,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.fcmnotifydemo"
+      "bundleIdentifier": "com.example.fcmnotifydemo",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,21 +27,27 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.example.fcmnotifydemo",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "expo-notifications"
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": ["./assets/sounds/notification.wav"]
+        }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "your-project-id"
+        "projectId": "ad0e432e-2f27-458e-9deb-12c38ca899a6"
       }
     },
-    "newArchEnabled": true
+    "owner": "sugatraj"
   }
 } 

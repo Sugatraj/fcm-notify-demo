@@ -26,19 +26,19 @@ export const Clock = () => {
 
   const formatDate = (date) => {
     return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
+          weekday: 'long', 
+          month: 'long', 
       day: 'numeric',
     });
-  };
+};
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       alignItems: 'flex-start',
     },
     timeContainer: {
       marginBottom: 8,
-    },
+  },
     timeText: {
       ...getTypography('display', 'large'),
       color: theme.colors.primary,
@@ -51,12 +51,12 @@ export const Clock = () => {
       color: theme.colors.primary,
       fontSize: 48,
       lineHeight: 56,
-    },
+  },
     dateText: {
       ...getTypography('title', 'medium'),
       color: theme.colors.onSurfaceVariant,
-    },
-  });
+  },
+}); 
 
   return (
     <View style={styles.container}>

@@ -1,22 +1,45 @@
 {
   "cli": {
-    "version": ">= 5.9.1"
+    "version": ">= 5.9.1",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug",
+        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
+        "env": {
+          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
+          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
+        }
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "withoutCredentials": true,
+        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
+        "env": {
+          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
+          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
+        }
       }
     },
-    "production": {}
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
+        "env": {
+          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
+          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
+        }
+      }
+    }
   },
   "submit": {
     "production": {}

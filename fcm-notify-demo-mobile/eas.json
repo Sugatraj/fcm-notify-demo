@@ -9,12 +9,7 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug",
-        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
-        "env": {
-          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
-          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
-        }
+        "gradleCommand": ":app:assembleDebug"
       }
     },
     "preview": {
@@ -22,22 +17,12 @@
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease",
-        "withoutCredentials": true,
-        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
-        "env": {
-          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
-          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
-        }
+        "withoutCredentials": true
       }
     },
     "production": {
       "android": {
-        "buildType": "app-bundle",
-        "image": "ubuntu-18.04-jdk-11-ndk-r19c",
-        "env": {
-          "ANDROID_NDK_HOME": "/opt/android-ndk-r19c",
-          "ANDROID_SDK_ROOT": "/opt/android-sdk-linux"
-        }
+        "buildType": "app-bundle"
       }
     }
   },

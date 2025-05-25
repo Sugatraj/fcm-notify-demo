@@ -24,53 +24,45 @@ export const Search = () => {
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: isFocused ? theme.colors.surfaceContainerHighest : theme.colors.surfaceContainerLowest,
-      borderRadius: 28,
-      paddingHorizontal: 4,
+      backgroundColor: theme.colors.surface,
+      borderRadius: 30,
       height: 56,
-      marginBottom: 24,
+      marginBottom: 32,
+      borderWidth: 0.5,
+      borderColor: theme.colors.outline,
     },
     input: {
       flex: 1,
       ...getTypography('body', 'large'),
       color: theme.colors.onSurface,
-      marginLeft: 12,
+      marginLeft: 8,
       height: '100%',
       paddingVertical: 8,
     },
     searchButton: {
-      padding: 12,
-      borderRadius: 24,
-    },
-    searchButtonPressed: {
-      backgroundColor: theme.colors.surfaceVariant,
+      padding: 16,
     },
     engineSection: {
       marginTop: 8,
     },
     engineLabel: {
-      ...getTypography('label', 'medium'),
-      color: theme.colors.onSurfaceVariant,
-      marginBottom: 12,
+      ...getTypography('title', 'small'),
+      color: theme.colors.onSurface,
+      marginBottom: 16,
     },
     engineGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: 8,
+      gap: 12,
     },
     engineButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.colors.surfaceContainerLowest,
       paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 20,
-    },
-    engineButtonSelected: {
-      backgroundColor: theme.colors.surfaceContainerHighest,
+      paddingHorizontal: 4,
     },
     engineText: {
-      ...getTypography('label', 'large'),
+      ...getTypography('body', 'large'),
       color: theme.colors.onSurface,
       marginLeft: 8,
     },
@@ -79,23 +71,13 @@ export const Search = () => {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.searchButton,
-            pressed && styles.searchButtonPressed,
-          ]}
-          android_ripple={{ 
-            color: theme.colors.onSurfaceVariant,
-            borderless: true,
-            radius: 24,
-          }}
-        >
+        <View style={styles.searchButton}>
           <Ionicons 
             name="search" 
             size={24} 
             color={theme.colors.onSurfaceVariant} 
           />
-        </Pressable>
+        </View>
         <TextInput
           style={styles.input}
           placeholder="Search"
@@ -111,19 +93,12 @@ export const Search = () => {
           {searchEngines.map((engine) => (
             <Pressable
               key={engine.id}
-              style={[
-                styles.engineButton,
-                selectedEngine === engine.id && styles.engineButtonSelected,
-              ]}
+              style={styles.engineButton}
               onPress={() => setSelectedEngine(engine.id)}
-              android_ripple={{ 
-                color: theme.colors.onSurfaceVariant,
-                borderless: true,
-              }}
             >
               <Ionicons
                 name={engine.icon}
-                size={20}
+                size={24}
                 color={theme.colors.onSurface}
               />
               <Text style={styles.engineText}>{engine.name}</Text>

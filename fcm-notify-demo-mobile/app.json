@@ -42,7 +42,7 @@
           "sounds": [
             "./assets/sounds/new-order.wav",
             "./assets/sounds/order-ready.wav",
-            "./assets/sounds/order-cancelled.wav"
+            "./assets/sounds/order_cancelled.wav"
           ]
         }
       ]
